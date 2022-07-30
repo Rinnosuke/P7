@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { useInput } from '../../utils/hooks'
 import { ConnexionInfoContext } from '../../utils/context'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 const HomeWrapper = styled.div`
@@ -40,15 +40,14 @@ function Home() {
   const [passwordValue, setPasswordValue] = useInput()
 
   const {connexionInfo, saveConnexionInfo} = useContext(ConnexionInfoContext)
+  const navigate = useNavigate()
 
-  function connection(e) {
+  async function connection(e) {
     e.preventDefault()
-    
-    async function fetchData() {
     try {
         const loginInfo = {
             email : emailValue,
-            password: passwordValue}
+            password : passwordValue}
         const response = await fetch(`http://localhost:8000/api/auth/login`, {
             method: "POST",
             headers: {
@@ -58,11 +57,10 @@ function Home() {
             })
         const data = await response.json()
         !data.error && saveConnexionInfo(data)
+        !data.error && navigate("/forum")
     } catch (err) {
         console.log(err)
     } 
-    }
-    fetchData()
   }
 
   function asterix() {
@@ -71,7 +69,7 @@ function Home() {
 
   return (
     <HomeWrapper>
-      {!connexionInfo? (
+      {!connexionInfo ? (
         <HomeContainer>
         <StyledTitle>
           Connectez vous et partagez vos expériences sur le forum de Groupmania !

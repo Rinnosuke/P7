@@ -5,6 +5,7 @@ import { Loader } from '../../utils/style/Atoms'
 import { useFetch, useInput } from '../../utils/hooks'
 import { useState, useContext } from 'react'
 import { ConnexionInfoContext } from '../../utils/context'
+import { Link, useNavigate } from 'react-router-dom'
 
 const CardsContainer = styled.div`
   display: flex;
@@ -45,89 +46,17 @@ height: 150px;
 
 
 function Forum(){
-    const [creation, setCreation] = useState(false)
-    const [titleValue, setTitleValue] = useInput()
-    const [contentValue, setContentValue] = useInput()
-    const [imgUrl, setImgUrl] = useState()
-    const [img, setImg] = useState()
-    const {connexionInfo, saveConnexionInfo} = useContext(ConnexionInfoContext)
-
-    const onImageChange = (e) => {
-      const [file] = e.target.files
-      setImg(file)
-      setImgUrl(URL.createObjectURL(file))
-    };
-
     const { data, isLoading, error } = useFetch(
         `http://localhost:8000/api/forum/`
         )
-        const postsList = data
-
-        if (error) {
-        return <span>Oups il y a eu un problème</span>
+    const postsList = data
+    if (error) {
+    return <span>Oups il y a eu un problème</span>
     }
-
-    function create(){
-        setCreation(true)
-    }
-
-    function post(e) {
-        e.preventDefault()
-        async function fetchData() {
-            try {
-                const postInfo = new FormData()
-                const postContent = {
-                    title : titleValue,
-                    content : contentValue
-                }
-                postInfo.append('post', JSON.stringify(postContent))
-                postInfo.append('image', img)
-                
-                const response = await fetch(`http://localhost:8000/api/forum/`, {
-                    method: "POST",
-                    headers: {
-                    'Authorization': 'Bearer '+ connexionInfo.token
-                    },
-                    body: postInfo
-                    })
-                const data = await response.json()
-                !data.error && console.log(data)
-            } catch (err) {
-                console.log(err)
-            } 
-            }
-            fetchData()
-    }
-    
       return (
         <div>
           <CardsContainer>
-            {!creation ? 
-            <button onClick={create}> Créez un nouveau post</button> :
-            <Styledform onSubmit={post}>
-                <input
-                    placeholder='Titre'
-                    onChange={setTitleValue}
-                    value={titleValue}
-                />
-                <StyledTextarea
-                    placeholder='Contenu'
-                    onChange={setContentValue}
-                    value={contentValue}
-                />
-                <input
-                    type='file'
-                    onChange={onImageChange}
-                />
-                <img src={imgUrl} alt="" />
-                <input 
-                    type='submit'
-                    value='Créez un nouveau post'
-                />
-            </Styledform>
-            }
-            
-           
+            <Link to={`/creation`}>Créer un nouveau post</Link>
           </CardsContainer>
           {isLoading ? (
             <LoaderWrapper>
@@ -136,12 +65,11 @@ function Forum(){
           ) : (
             <CardsContainer>
               {postsList.map((post, index) => (
-                <Card
-                  key={`${post.name}-${index}`}
-                  title={post.title}
-                  content={post.content}
-                  picture={post.imageUrl}
-                />
+                <Link to={`/post/${post._id}`} key={`${post.name}-${index}`}>
+                  <Card
+                    post={post}
+                  />
+                </Link>
               ))}
             </CardsContainer>
           )}

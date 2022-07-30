@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
-import { useState, useEffect } from 'react'
 import { useInput } from '../../utils/hooks'
+import { useNavigate } from 'react-router-dom'
 
 const HomeWrapper = styled.div`
   display: flex;
@@ -33,11 +33,10 @@ justify-content: center;
 function Inscription(){
     const [emailValue, setEmailValue] = useInput()
     const [passwordValue, setPasswordValue] = useInput()
+    const navigate = useNavigate()
 
-    function inscription(e) {
+    async function inscription(e) {
         e.preventDefault()
-        
-        async function fetchData() {
         try {
             const signupInfo = {
                 email : emailValue,
@@ -50,12 +49,11 @@ function Inscription(){
                 body: JSON.stringify(signupInfo)
                 })
             const data = await response.json()
-            console.log(data)
+            !data.error && navigate("/")
+            
         } catch (err) {
             console.log(err)
-        } 
         }
-        fetchData()
     }
 
     function asterix() {

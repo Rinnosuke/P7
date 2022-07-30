@@ -9,6 +9,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import Error from './components/Error'
 import GlobalStyle from './utils/style/GlobalStyle'
+import Creation from './pages/Creation';
 import { ConnexionInfoProvider } from './utils/context'
 
 const container = document.getElementById('root');
@@ -22,9 +23,10 @@ root.render(
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="inscription" element={<Inscription />} />
-          <Route path="forum" element={<Forum />} >
-            <Route path=":postNumber" element={<Post/>} />
-          </Route>
+          <Route path="forum" element={<Forum />} />
+          <Route path="creation" element={<Creation />} />
+          <Route path="post" element={<Post />} />
+          <Route path="post/:id" element={<Post />} />
           <Route path="*" element={<Error />} />
         </Routes>
         <Footer />

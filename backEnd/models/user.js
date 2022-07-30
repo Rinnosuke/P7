@@ -4,7 +4,8 @@ const uniqueValidator = require('mongoose-unique-validator');
 //On crée notre modèle d'utilsateur avec Mongoose en s'assurant que l'email n'est pas utilisé
 const userSchema = mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
+  password: { type: String, required: true },
+  admin: { type: Boolean, default: false }
 });
 
 userSchema.plugin(uniqueValidator);

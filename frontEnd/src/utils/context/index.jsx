@@ -8,7 +8,7 @@ export const ConnexionInfoProvider = ({ children }) => {
 
   const saveConnexionInfo = (data) => {
     setConnexionInfo (data ? 
-      ( data.admin ? {token : data.token, id : data.userId, admin : true} : {token : data.token, id : data.userId}) 
+      ( data.admin ? {token : data.token, userId : data.userId, admin : true} : {token : data.token, userId : data.userId}) 
         : null )
   }
 

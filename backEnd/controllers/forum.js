@@ -1,8 +1,13 @@
 const Post = require('../models/post');
 const fs = require('fs');
+const User = require('../models/user');
+const Counter = require('../models/counter');
 
 //Fonction pour créer un nouveau post
 exports.createPost = (req, res, next) => {
+  Counter.findOne({name : "lastPostNumber"})
+  .then((lastPostNumber) => {
+    const newPostNumber = lastPostNumber.counter + 1
 //On convertit le Json en objet javascript
   const postObject = JSON.parse(req.body.post);
 //On supprime l'id de la requète
@@ -16,16 +21,19 @@ exports.createPost = (req, res, next) => {
       userId: req.auth.userId,
 //On lui donne l'adresse de l'image sauvegardé
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-//On rajoute toutes les inforamtions nécessaires
+//On rajoute toutes les informations nécessaires
       likes: 0,
       dislikes: 0,
       usersLiked: [],
-      usersDisliked: []
+      usersDisliked: [],
+      postNumber : newPostNumber
   });
 //On sauvegarde notre post dans la base de donnée
   post.save()
   .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
+  .then(() => { Counter.updateOne({name : "lastPostNumber"}, {$set:  {counter: newPostNumber}})})
   .catch(error => { res.status(400).json( { error })})
+})
 };
 
 //Fonction pour modifier un post
@@ -37,51 +45,57 @@ exports.modifyPost = (req, res, next) => {
   } : { ...req.body };
 //On supprime l'userId au cas où l'utilsateur l'aurait modifié  
   delete postObject._userId;
+  User.findById(req.auth.userId)
+  .then((user) => {
 //On récupère le post dans la base de donnée
-  Post.findOne({_id: req.params.id})
-      .then((post) => {
+    Post.findOne({_id: req.params.id})
+        .then((post) => {
 //On vérifie que le post appartient bien à l'utilsateur
-          if (post.userId != req.auth.userId) {
-              res.status(403).json({ message : 'unauthorized request.'});
-          } else {
-              if (req.file){
+            if (post.userId != req.auth.userId && !user.admin) {
+                res.status(403).json({ message : 'unauthorized request.'});
+            } else {
+                if (req.file){
 //On supprime l'ancienne image
-                const filename = post.imageUrl.split('/images/')[1];
-                fs.unlink(`images/${filename}`, () => {});
-              }
+                  const filename = post.imageUrl.split('/images/')[1];
+                  fs.unlink(`images/${filename}`, () => {});
+                }
 //Enfin on modifie le post
-              Post.updateOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
-              .then(() => res.status(200).json({message : 'Objet modifié!'}))
-              .catch(error => res.status(401).json({ error }));
-          }
-      })
-      .catch((error) => {
-          res.status(400).json({ error });
-      });
+                Post.updateOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
+                .then(() => res.status(200).json({message : 'Objet modifié!'}))
+                .catch(error => res.status(401).json({ error }));
+            }
+        })
+        .catch((error) => {
+            res.status(400).json({ error });
+        });
+    })
 };
 
 //Fonction pour supprimer un post
 exports.deletePost = (req, res, next) => {
+User.findById(req.auth.userId)
+  .then((user) => {
 //On récupère le post dans la base de donnée
-  Post.findOne({ _id: req.params.id})
-      .then(post => {
+    Post.findOne({ _id: req.params.id})
+        .then(post => {
 //On vérifie que le post appartient bien à l'utilsateur
-          if (post.userId != req.auth.userId) {
-              res.status(403).json({ message : 'unauthorized request.'});
-          } else {
+            if (post.userId != req.auth.userId && !user.admin) {
+                res.status(403).json({ message : 'unauthorized request.'});
+            } else {
 //On supprime l'image
-              const filename = post.imageUrl.split('/images/')[1];
-              fs.unlink(`images/${filename}`, () => {
+                const filename = post.imageUrl.split('/images/')[1];
+                fs.unlink(`images/${filename}`, () => {
 //Enfin on supprime le post de la base de donnée
-                  Post.deleteOne({_id: req.params.id})
-                      .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
-                      .catch(error => res.status(401).json({ error }));
-              });
-          }
-      })
-      .catch( error => {
-          res.status(500).json({ error });
-      });
+                    Post.deleteOne({_id: req.params.id})
+                        .then(() => { res.status(200).json({message: 'Objet supprimé !'})})
+                        .catch(error => res.status(401).json({ error }));
+                });
+            }
+        })
+        .catch( error => {
+            res.status(500).json({ error });
+        });
+  })
 };
 
 //Fonction qui renvoie un post
@@ -109,6 +123,9 @@ exports.getAllPost = (req, res, next) => {
   Post.find().then(
 //On renvoie les posts dans la réponse
     (posts) => {
+      posts.sort((postA, postB) =>{
+        return postA.postNumber > postB.postNumber ? 1 : -1
+      })
       res.status(200).json(posts);
     }
   ).catch(
