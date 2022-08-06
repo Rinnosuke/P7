@@ -1,43 +1,67 @@
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
-import DefaultPicture from '../../assets/profile.png'
 import { useState, useContext } from 'react'
 import { ConnexionInfoContext } from '../../utils/context'
+import ThumbsUp from '../../assets/thumbs-up-solid.svg'
+import ThumbsDown from '../../assets/thumbs-down-solid.svg'
 
 const CardContent = styled.span`
-  color: #5843e4;
   font-size: 22px;
-  font-weight: normal;
-  padding-left: 15px;
+  color: ${colors.tertiary};
 `
 
-const CardTitle = styled.span`
-  color: black;
+const CardTitle = styled.h2`
+  color: ${colors.primary};
   font-size: 22px;
-  font-weight: normal;
   align-self: center;
+  margin: 5px;
 `
 
 const CardImage = styled.img`
-  height: 150px;
-  width: 150px;
+  width: 100%
   align-self: center;
-  border-radius: 50%;
 `
 
 const CardWrapper = styled.div`
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   padding: 15px;
-  border: 5px solid ${colors.tertiary};
+  margin: 10px;
+  border: 5px solid black;
   width: 600px;
-  height: 300px;
   transition: 200ms;
   &:hover {
     cursor: pointer;
     box-shadow: 2px 2px 10px #e2e3e9;
   }
+`
+const ButtonContainer = styled.div`
+  display: flex;
+`
+
+const StyledButton = styled.button`
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+  margin: 1px;
+`
+
+const StyledImg = styled.img`
+  width: 20px;
+  margin-left: 3px;
+`
+const GreenImg = styled.img`
+  width: 20px;
+  margin-left: 3px;
+  filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+`
+
+const RedImg = styled.img`
+  width: 20px;
+  margin-left: 3px;
+  filter: invert(12%) sepia(70%) saturate(5863%) hue-rotate(357deg) brightness(117%) contrast(118%);
 `
 
 function Card({ post }) {
@@ -85,13 +109,14 @@ function Card({ post }) {
   }
   return (
     <CardWrapper>
-      <CardImage src={post.imageUrl} alt={post.title} />
       <CardTitle>{post.title}</CardTitle>
+      <CardImage src={post.imageUrl} alt={post.title} />
       <CardContent>{post.content}</CardContent>
-      <button onClick={like}>{postLikes} Likes</button>
-      <button onClick={dislike}>{postDislikes} Dislikes</button>
+      <ButtonContainer>
+        <StyledButton onClick={like}>{postLikes}  {liked? <GreenImg src={ThumbsUp} /> : <StyledImg src={ThumbsUp} />}</StyledButton>
+        <StyledButton onClick={dislike}>{postDislikes}  {disliked? <RedImg src={ThumbsDown} /> : <StyledImg src={ThumbsDown} />}</StyledButton>
+      </ButtonContainer>
     </CardWrapper>
-    
   )
 }
 

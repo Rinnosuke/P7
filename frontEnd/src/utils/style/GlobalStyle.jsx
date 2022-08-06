@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
+import colors from './colors'
 
 const StyledGlobalStyle = createGlobalStyle`
     * {
@@ -7,6 +8,7 @@ const StyledGlobalStyle = createGlobalStyle`
 
     body {
         margin: 0;
+        background-color: ${colors.tertiary};
     }
 `
 

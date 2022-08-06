@@ -6,7 +6,10 @@ import { useNavigate } from 'react-router-dom'
 const HomeWrapper = styled.div`
   display: flex;
   justify-content: center;
+  background-color: white;
+  margin: 0 40px;
 `
+
 
 const HomeContainer = styled.div`
   margin: 30px;
@@ -14,20 +17,38 @@ const HomeContainer = styled.div`
   display: flex;
   flex-direction: column;
   max-width: 1200px;
+  align-items: center;
 `
 
 
 const StyledTitle = styled.h2`
-  padding-bottom: 30px;
-  line-height: 50px;
+  line-height: 40px;
   max-width: 500px;
   text-align: center;
+  color: ${colors.tertiary};
 `
 
-const Styledform = styled.form`
+const StyledForm = styled.form`
 display: flex;
 flex-direction: column;
 justify-content: center;
+`
+
+const StyledInput = styled.input`
+width: 700px;
+margin-bottom: 10px;
+color: ${colors.tertiary};
+`
+
+const StyledButtonInput = styled.input`
+width: 180px;
+color: ${colors.tertiary};
+background-color: ${colors.secondary};
+font-size: 18px;
+&:hover{
+  filter: brightness(95%);
+  box-shadow: 2px 2px 5px ${colors.tertiary};
+}
 `
 
 function Inscription(){
@@ -66,22 +87,22 @@ function Inscription(){
         <StyledTitle>
           Rentrez votre adresse Email et choisissez un mot de passe pour vous inscrire.
         </StyledTitle>
-        <Styledform onSubmit={inscription}>
-            <input
+        <StyledForm onSubmit={inscription}>
+            <StyledInput
                     placeholder='Email'
                     onChange={setEmailValue}
                     value={emailValue}
                 />
-            <input
+            <StyledInput
                     placeholder='Mot de passe'
                     onChange={setPasswordValue}
                     value={asterix()}
                 />
-            <input 
+            <StyledButtonInput 
                     type='submit'
-                    value='Créez votre compte'
+                    value='Créer votre compte'
                 />
-        </Styledform>
+        </StyledForm>
       </HomeContainer>
     </HomeWrapper>
   )

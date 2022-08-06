@@ -2,10 +2,8 @@ import Card from '../../components/Card'
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 import { Loader } from '../../utils/style/Atoms'
-import { useFetch, useInput } from '../../utils/hooks'
-import { useState, useContext } from 'react'
-import { ConnexionInfoContext } from '../../utils/context'
-import { Link, useNavigate } from 'react-router-dom'
+import { useFetch} from '../../utils/hooks'
+import { Link} from 'react-router-dom'
 
 const CardsContainer = styled.div`
   display: flex;
@@ -13,35 +11,23 @@ const CardsContainer = styled.div`
   align-items: center;
   justify-items: center;
 `
-
-const PageTitle = styled.h1`
-  font-size: 30px;
-  text-align: center;
-  padding-bottom: 30px;
-`
-
-const PageSubtitle = styled.h2`
-  font-size: 20px;
-  color: ${colors.secondary};
-  font-weight: 300;
-  text-align: center;
-  padding-bottom: 30px;
-`
-
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
 `
-
-const Styledform = styled.form`
-display: flex;
-flex-direction: column;
-justify-content: center;
-width: 600px;
+const StyledButton = styled.button`
+color: ${colors.tertiary};
+background-color: ${colors.secondary};
+font-size: 25px;
+padding: 20px 40px;
+&:hover{
+  filter: brightness(95%);
+  box-shadow: 2px 2px 5px ${colors.tertiary};
+}
 `
-
-const StyledTextarea = styled.textarea`
-height: 150px;
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 `
 
 
@@ -50,31 +36,32 @@ function Forum(){
         `http://localhost:8000/api/forum/`
         )
     const postsList = data
+
     if (error) {
     return <span>Oups il y a eu un problème</span>
     }
-      return (
-        <div>
+    return (
+      <div>
+        {isLoading ? (
+          <LoaderWrapper>
+            <Loader />
+          </LoaderWrapper>
+        ) : (
           <CardsContainer>
-            <Link to={`/creation`}>Créer un nouveau post</Link>
+            <StyledButton>
+              <StyledLink to={`/creation`}>Créer un nouveau post</StyledLink>
+            </StyledButton>
+            {postsList.map((post, index) => (
+              <StyledLink to={`/post/${post._id}`} key={`${post.name}-${index}`}>
+                <Card
+                  post={post}
+                />
+              </StyledLink>
+            ))}
           </CardsContainer>
-          {isLoading ? (
-            <LoaderWrapper>
-              <Loader />
-            </LoaderWrapper>
-          ) : (
-            <CardsContainer>
-              {postsList.map((post, index) => (
-                <Link to={`/post/${post._id}`} key={`${post.name}-${index}`}>
-                  <Card
-                    post={post}
-                  />
-                </Link>
-              ))}
-            </CardsContainer>
-          )}
-        </div>
-      )
+        )}
+      </div>
+    )
 }
 
 export default Forum

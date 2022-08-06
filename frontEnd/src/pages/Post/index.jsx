@@ -1,26 +1,62 @@
 import Card from '../../components/Card'
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
-import { Loader } from '../../utils/style/Atoms'
 import { useFetch, useInput } from '../../utils/hooks'
 import { useState, useContext } from 'react'
 import { ConnexionInfoContext } from '../../utils/context'
 import { useParams, useNavigate } from 'react-router-dom'
+import { Loader } from '../../utils/style/Atoms'
 
-const Styledform = styled.form`
-display: flex;
-flex-direction: column;
-justify-content: center;
-width: 600px;
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+const CardContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+`
+
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 600px;
+    background-color: white;
+    padding: 10px;
 `
 
 const StyledTextarea = styled.textarea`
-height: 150px;
+    height: 150px;
 `
 
 const StyledImg = styled.img`
-height: 150px;
-width: 150px;
+    height: 150px;
+    width: 150px;
+`
+
+const StyledButton = styled.button`
+width: 120px;
+margin: 10px;
+color: ${colors.tertiary};
+background-color: ${colors.secondary};
+font-size: 18px;
+&:hover{
+  filter: brightness(95%);
+  box-shadow: 2px 2px 5px ${colors.tertiary};
+}
+`
+const StyledButtonInput = styled.input`
+    width: 250px;
+    color: ${colors.tertiary};
+    background-color: ${colors.secondary};
+    font-size: 18px;
+    &:hover{
+    filter: brightness(95%);
+    box-shadow: 2px 2px 5px ${colors.tertiary};
+}
 `
 
 function Post(){
@@ -106,40 +142,46 @@ function Post(){
     }
 
     return (
-        
         <div>
-            {!modification ? 
-            <div>
-            <StyledImg src={post.imageUrl} alt={post.title} />
-            <div>{post.title}</div>
-            <div>{post.content}</div>
-            {post.userId == connexionInfo.userId || connexionInfo.admin? (
-                <div>
-            <button onClick={modify}> Modifier</button>
-            <button onClick={deletePost}> Suprimer</button>
-            </div>) : null}
-            </div> :
-            <Styledform onSubmit={modifyPost}>
-                <input
-                    placeholder={post.title}
-                    onChange={setTitleValue}
-                    value={titleValue}
-                />
-                <StyledTextarea
-                    placeholder={post.content}
-                    onChange={setContentValue}
-                    value={contentValue}
-                />
-                <input
-                    type='file'
-                    onChange={onImageChange}
-                />
-                <StyledImg src={imgUrl} alt="" />
-                <input 
-                    type='submit'
-                    value='modifier votre post'
-                />
-            </Styledform> }
+        {isLoading ? (
+            <LoaderWrapper>
+                <Loader />
+            </LoaderWrapper>
+            ) : (
+            <CardContainer>
+                {!modification ? 
+                    <div>
+                        <Card
+                            post={post}
+                            />
+                            {post.userId == connexionInfo.userId || connexionInfo.admin? (
+                        <div>
+                        <StyledButton onClick={modify}> Modifier</StyledButton>
+                        <StyledButton onClick={deletePost}> Suprimer</StyledButton>
+                        </div>) : null}
+                    </div> :
+                    <StyledForm onSubmit={modifyPost}>
+                        <input
+                            placeholder={post.title}
+                            onChange={setTitleValue}
+                            value={titleValue}
+                        />
+                        <StyledTextarea
+                            placeholder={post.content}
+                            onChange={setContentValue}
+                            value={contentValue}
+                        />
+                        <input
+                            type='file'
+                            onChange={onImageChange}
+                        />
+                        <StyledImg src={imgUrl} alt="" />
+                        <StyledButtonInput 
+                            type='submit'
+                            value='modifier votre post'
+                        />
+                    </StyledForm> }
+            </CardContainer>)}
         </div>
     )
 }

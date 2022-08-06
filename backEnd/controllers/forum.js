@@ -1,13 +1,9 @@
 const Post = require('../models/post');
 const fs = require('fs');
 const User = require('../models/user');
-const Counter = require('../models/counter');
 
 //Fonction pour créer un nouveau post
 exports.createPost = (req, res, next) => {
-  Counter.findOne({name : "lastPostNumber"})
-  .then((lastPostNumber) => {
-    const newPostNumber = lastPostNumber.counter + 1
 //On convertit le Json en objet javascript
   const postObject = JSON.parse(req.body.post);
 //On supprime l'id de la requète
@@ -26,14 +22,12 @@ exports.createPost = (req, res, next) => {
       dislikes: 0,
       usersLiked: [],
       usersDisliked: [],
-      postNumber : newPostNumber
+      date : Date.now()
   });
 //On sauvegarde notre post dans la base de donnée
   post.save()
   .then(() => { res.status(201).json({message: 'Objet enregistré !'})})
-  .then(() => { Counter.updateOne({name : "lastPostNumber"}, {$set:  {counter: newPostNumber}})})
   .catch(error => { res.status(400).json( { error })})
-})
 };
 
 //Fonction pour modifier un post
@@ -121,11 +115,12 @@ exports.getOnePost = (req, res, next) => {
 exports.getAllPost = (req, res, next) => {
 //On récupère les posts dans la base de donnée
   Post.find().then(
-//On renvoie les posts dans la réponse
+//On range les posts par leur date de création
     (posts) => {
       posts.sort((postA, postB) =>{
-        return postA.postNumber > postB.postNumber ? 1 : -1
+        return postA.date > postB.date ? -1 : 1
       })
+//On renvoie les posts dans la réponse
       res.status(200).json(posts);
     }
   ).catch(

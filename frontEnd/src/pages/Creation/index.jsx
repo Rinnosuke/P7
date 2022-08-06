@@ -1,21 +1,39 @@
-import Card from '../../components/Card'
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
-import { Loader } from '../../utils/style/Atoms'
-import { useFetch, useInput } from '../../utils/hooks'
+import { useInput } from '../../utils/hooks'
 import { useState, useContext } from 'react'
 import { ConnexionInfoContext } from '../../utils/context'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
-const Styledform = styled.form`
-display: flex;
-flex-direction: column;
-justify-content: center;
-width: 600px;
+const FormContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+`
+
+const StyledForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 600px;
+    background-color: white;
+    padding: 10px;
+    border: 5px solid black;
+`
+const StyledButtonInput = styled.input`
+    width: 250px;
+    color: ${colors.tertiary};
+    background-color: ${colors.secondary};
+    font-size: 18px;
+    &:hover{
+    filter: brightness(95%);
+    box-shadow: 2px 2px 5px ${colors.tertiary};
+}
 `
 
 const StyledTextarea = styled.textarea`
-height: 150px;
+    height: 150px;
 `
 function Creation(){
     const [titleValue, setTitleValue] = useInput()
@@ -60,7 +78,8 @@ function Creation(){
     }
     
       return (
-            <Styledform onSubmit={post}>
+        <FormContainer>
+            <StyledForm onSubmit={post}>
                 <input
                     placeholder='Titre'
                     onChange={setTitleValue}
@@ -76,11 +95,12 @@ function Creation(){
                     onChange={onImageChange}
                 />
                 <img src={imgUrl} alt="" />
-                <input 
+                <StyledButtonInput
                     type='submit'
                     value='Créer un nouveau post'
                 />
-            </Styledform>
+            </StyledForm>
+        </FormContainer>
       )
 }
 
