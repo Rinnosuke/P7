@@ -83,10 +83,6 @@ function Home() {
     } 
   }
 
-  function asterix() {
-    return passwordValue.replaceAll(/\w/g, ('*'))
-  }
-
   return (
     <HomeWrapper>
       {!connexionInfo ? (
@@ -97,13 +93,15 @@ function Home() {
         <StyledForm onSubmit={connection}>
             <StyledInput
                 placeholder='Email'
+                type='email'
                 onChange={setEmailValue}
                 value={emailValue}
             />
             <StyledInput
                 placeholder='Mot de passe'
+                type='password'
                 onChange={setPasswordValue}
-                value={asterix()}
+                value={passwordValue}
             />
             <StyledButtonInput 
                 type='submit'

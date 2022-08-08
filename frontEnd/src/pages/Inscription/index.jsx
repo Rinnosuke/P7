@@ -76,11 +76,7 @@ function Inscription(){
             console.log(err)
         }
     }
-
-    function asterix() {
-        return passwordValue.replaceAll(/\w/g, ('*'))
-    }
-
+    
   return (
     <HomeWrapper>
       <HomeContainer>
@@ -89,15 +85,17 @@ function Inscription(){
         </StyledTitle>
         <StyledForm onSubmit={inscription}>
             <StyledInput
-                    placeholder='Email'
-                    onChange={setEmailValue}
-                    value={emailValue}
-                />
+                placeholder='Email'
+                type='email'
+                onChange={setEmailValue}
+                value={emailValue}
+            />
             <StyledInput
-                    placeholder='Mot de passe'
-                    onChange={setPasswordValue}
-                    value={asterix()}
-                />
+                placeholder='Mot de passe'
+                type='password'
+                onChange={setPasswordValue}
+                value={passwordValue}
+            />
             <StyledButtonInput 
                     type='submit'
                     value='Créer votre compte'
