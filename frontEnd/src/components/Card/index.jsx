@@ -63,7 +63,7 @@ const RedImg = styled.img`
   margin-left: 3px;
   filter: invert(12%) sepia(70%) saturate(5863%) hue-rotate(357deg) brightness(117%) contrast(118%);
 `
-
+//Notre élément Card prend un post en prop pour pouvoir l'afficher
 function Card({ post }) {
   const {connexionInfo, saveConnexionInfo} = useContext(ConnexionInfoContext)
 
@@ -72,6 +72,7 @@ function Card({ post }) {
   const [postLikes, setPostLikes] = useState(post.likes)
   const [postDislikes, setPostDislikes] = useState(post.dislikes)
 
+//Fonction qui envoie au serveur si nous avons like/dislike un post
   async function postLike(like) {
         try {
           const likeInfo = {
@@ -93,13 +94,17 @@ function Card({ post }) {
           } 
   }
 
+//Fonction quand on appuis sur le bouton like
   function like(e) {
     e.preventDefault()
     e.nativeEvent.stopPropagation()
+//On regarde si on doit rajouter ou enlever un like
     !liked ? postLike(1) : postLike(0)
+//On change les informations de la page
     !liked ? setPostLikes(postLikes + 1): setPostLikes(postLikes - 1)
     setLiked(!liked)
   }
+//Même chose que au dessus mais pour le bouton dislike
   function dislike(e) {
     e.preventDefault()
     e.nativeEvent.stopPropagation()
@@ -109,10 +114,12 @@ function Card({ post }) {
   }
   return (
     <CardWrapper>
+{/*On regarde le prop pour savoir ce qu'on affiche*/}
       <CardTitle>{post.title}</CardTitle>
       <CardImage src={post.imageUrl} alt={post.title} />
       <CardContent>{post.content}</CardContent>
       <ButtonContainer>
+{/*On regarde si le prop est liker/disliker pour l'affichage des boutons coreespondants*/}
         <StyledButton onClick={like}>{postLikes}  {liked? <GreenImg src={ThumbsUp} /> : <StyledImg src={ThumbsUp} />}</StyledButton>
         <StyledButton onClick={dislike}>{postDislikes}  {disliked? <RedImg src={ThumbsDown} /> : <StyledImg src={ThumbsDown} />}</StyledButton>
       </ButtonContainer>

@@ -43,12 +43,14 @@ function Creation(){
     const {connexionInfo, saveConnexionInfo} = useContext(ConnexionInfoContext)
     const navigate = useNavigate()
 
+//Fonction pour se souvenir de l'image uploader ainsi que de son URL
     const onImageChange = (e) => {
       const [file] = e.target.files
       setImg(file)
       setImgUrl(URL.createObjectURL(file))
     };
 
+//Fonction pour enregistrer le nouveau post dans le serveur
     function post(e) {
       e.preventDefault()
       async function fetchData() {
@@ -79,6 +81,7 @@ function Creation(){
     
       return (
         <FormContainer>
+{/*On récupère les informations du nouveau post avec un formulaire*/}
             <StyledForm onSubmit={post}>
                 <input
                     placeholder='Titre'

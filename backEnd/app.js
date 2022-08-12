@@ -7,7 +7,7 @@ const path = require('path');
 //On initialise notre appli avec Express
 const app = express();
 
-//On se connect à notre base de donnée sur MongoDb
+//On se connect à notre base de donnée MongoDb
 mongoose.connect('mongodb://localhost:27017/mydb',
   { useNewUrlParser: true,
     useUnifiedTopology: true })

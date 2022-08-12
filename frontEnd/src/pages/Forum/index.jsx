@@ -32,6 +32,7 @@ const StyledLink = styled(Link)`
 
 
 function Forum(){
+//On récupère tour les posts du forum depuis le serveur avec notre hook personnalisé
     const { data, isLoading, error } = useFetch(
         `http://localhost:8000/api/forum/`
         )
@@ -42,6 +43,7 @@ function Forum(){
     }
     return (
       <div>
+{/*En attendant la réponse du serveur on affiche seulement notre loader*/}
         {isLoading ? (
           <LoaderWrapper>
             <Loader />
@@ -51,6 +53,7 @@ function Forum(){
             <StyledButton>
               <StyledLink to={`/creation`}>Créer un nouveau post</StyledLink>
             </StyledButton>
+{/*On affiche nos éléments un à un grâce à notre élément Card en lui donnant les posts en props*/}
             {postsList.map((post, index) => (
               <StyledLink to={`/post/${post._id}`} key={`${post.name}-${index}`}>
                 <Card

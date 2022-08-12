@@ -55,13 +55,15 @@ font-size: 18px;
 `
 
 function Home() {
-  
+
+//On sauvegardera les informations du formulaire avec notre hook useInput
   const [emailValue, setEmailValue] = useInput()
   const [passwordValue, setPasswordValue] = useInput()
 
   const {connexionInfo, saveConnexionInfo} = useContext(ConnexionInfoContext)
   const navigate = useNavigate()
 
+//Fonction qui envoie nos identifiants et reçois les informations de connection si nos identifiants sont corrects
   async function connection(e) {
     e.preventDefault()
     try {
@@ -90,6 +92,7 @@ function Home() {
         <StyledTitle>
           Connectez vous et partagez vos expériences sur le forum de Groupmania !
         </StyledTitle>
+{/*On permet à l'utilisateur de se connecter à notre site avec formulaire*/}
         <StyledForm onSubmit={connection}>
             <StyledInput
                 placeholder='Email'

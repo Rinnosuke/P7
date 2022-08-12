@@ -31,7 +31,7 @@ const StyledLink = styled(Link)`
   }
 `
 
-
+//Notre élément Header
 function Header() {
   const {connexionInfo, saveConnexionInfo} = useContext(ConnexionInfoContext)
 
@@ -40,6 +40,7 @@ function Header() {
   }
   return (
     <div>
+{/*On regarde si l'utilisateur est connecté et on change les liens en conséquence*/}
       {!connexionInfo ? (
         <NavContainer>
           <Link to="/">

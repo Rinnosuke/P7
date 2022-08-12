@@ -69,26 +69,29 @@ function Post(){
     const {connexionInfo, saveConnexionInfo} = useContext(ConnexionInfoContext)
     const navigate = useNavigate()
 
-    const onImageChange = (e) => {
-        const [file] = e.target.files
-        setImg(file)
-        setImgUrl(URL.createObjectURL(file))
-      };
-
+//On récupère les informations du post depuis le serveur avec notre hook personalisé
     const { data, isLoading, error } = useFetch(
         `http://localhost:8000/api/forum/${id}`
         )
     const post = data
-
     if (error) {
         return <span>Oups il y a eu un problème</span>
     }
 
+//Fonction pour se souvenir que l'utilsateur a appuyé sur le bouton modifier
     function modify() {
         setModification(true)
         setImgUrl(post.imageUrl)
     }
 
+//Fonction pour se souvenir de l'image uploader ainsi que de son URL
+    const onImageChange = (e) => {
+        const [file] = e.target.files
+        setImg(file)
+        setImgUrl(URL.createObjectURL(file))
+    }
+
+//Fonction pour enregistrer les modifications sur le serveur
     function modifyPost(e) {
         e.preventDefault()
         async function fetchData() {
@@ -98,10 +101,8 @@ function Post(){
                 title : titleValue,
                 content : contentValue
             }
-            
             postInfo.append('post', JSON.stringify(postContent))
             postInfo.append('image', img)
-
             const response = img ? await fetch(`http://localhost:8000/api/forum/${id}`, {
                 method: "PUT",
                 headers: {
@@ -143,6 +144,7 @@ function Post(){
 
     return (
         <div>
+{/*En attendant la réponse du serveur on affiche seulement notre loader*/}
         {isLoading ? (
             <LoaderWrapper>
                 <Loader />
@@ -151,6 +153,7 @@ function Post(){
             <CardContainer>
                 {!modification ? 
                     <div>
+{/*On affiche notre post et on rajoute deux boutons pour le modifier ou le supprimer*/}
                         <Card
                             post={post}
                             />
@@ -161,6 +164,7 @@ function Post(){
                         </div>) : null}
                     </div> :
                     <StyledForm onSubmit={modifyPost}>
+{/*Si l'utilisateur veut modifier son post on lui propose un formulaire pour rentrer les nouvelles informations*/}
                         <input
                             placeholder={post.title}
                             onChange={setTitleValue}
