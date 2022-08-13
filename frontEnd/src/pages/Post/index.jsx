@@ -4,10 +4,9 @@ import colors from '../../utils/style/colors'
 import { useFetch, useInput } from '../../utils/hooks'
 import { useState, useContext } from 'react'
 import { ConnexionInfoContext } from '../../utils/context'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Loader } from '../../utils/style/Atoms'
 import ArrowLeft from '../../assets/arrow-left-solid.svg'
-
 const LoaderWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -165,7 +164,7 @@ function Post(){
             </LoaderWrapper>
         ) : (
             <CardContainer>
-                <ArrowImg src={ArrowLeft} />
+                <Link to="/forum"><ArrowImg src={ArrowLeft} /></Link>
                 {!modification ? 
                     <div>
 {/*On affiche notre post et on rajoute deux boutons pour le modifier ou le supprimer*/}
