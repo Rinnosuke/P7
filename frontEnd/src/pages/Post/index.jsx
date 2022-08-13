@@ -6,6 +6,7 @@ import { useState, useContext } from 'react'
 import { ConnexionInfoContext } from '../../utils/context'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Loader } from '../../utils/style/Atoms'
+import ArrowLeft from '../../assets/arrow-left-solid.svg'
 
 const LoaderWrapper = styled.div`
   display: flex;
@@ -26,6 +27,9 @@ const StyledForm = styled.form`
     width: 600px;
     background-color: white;
     padding: 10px;
+    @media only screen and (max-width: 768px){
+        width: 400px;
+      }
 `
 
 const StyledTextarea = styled.textarea`
@@ -57,6 +61,16 @@ const StyledButtonInput = styled.input`
     filter: brightness(95%);
     box-shadow: 2px 2px 5px ${colors.tertiary};
 }
+`
+
+const ArrowImg = styled.img`
+  width: 25px;
+  filter: invert(22%) sepia(97%) saturate(3396%) hue-rotate(3deg) brightness(102%) contrast(103%);
+  position: relative;
+  right: 300px;
+  @media only screen and (max-width: 768px){
+    right: 200px;
+  }
 `
 
 function Post(){
@@ -149,8 +163,9 @@ function Post(){
             <LoaderWrapper>
                 <Loader />
             </LoaderWrapper>
-            ) : (
+        ) : (
             <CardContainer>
+                <ArrowImg src={ArrowLeft} />
                 {!modification ? 
                     <div>
 {/*On affiche notre post et on rajoute deux boutons pour le modifier ou le supprimer*/}

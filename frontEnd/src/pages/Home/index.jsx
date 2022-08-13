@@ -11,6 +11,9 @@ const HomeWrapper = styled.div`
   justify-content: center;
   background-color: white;
   margin: 0 40px;
+  @media only screen and (max-width: 768px){
+    margin: 20px;
+  }
 `
 
 
@@ -19,8 +22,12 @@ const HomeContainer = styled.div`
   padding: 60px 90px;
   display: flex;
   flex-direction: column;
+  width: 100%;
   max-width: 1200px;
   align-items: center;
+  @media only screen and (max-width: 768px){
+    margin: 0px;
+  }
 `
 
 
@@ -38,9 +45,15 @@ justify-content: center;
 `
 
 const StyledInput = styled.input`
-width: 700px;
+width: 500px;
 margin-bottom: 10px;
 color: ${colors.tertiary};
+@media only screen and (max-width: 768px){
+  width: 300px;
+}
+@media only screen and (min-width: 1080px){
+  width: 800px;
+}
 `
 
 const StyledButtonInput = styled.input`

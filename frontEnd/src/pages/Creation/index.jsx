@@ -20,6 +20,9 @@ const StyledForm = styled.form`
     background-color: white;
     padding: 10px;
     border: 5px solid black;
+    @media only screen and (max-width: 768px){
+        width: 400px;
+      }
 `
 const StyledButtonInput = styled.input`
     width: 250px;

@@ -36,6 +36,9 @@ const CardWrapper = styled.div`
     cursor: pointer;
     box-shadow: 2px 2px 10px #e2e3e9;
   }
+  @media only screen and (max-width: 768px){
+    width : 400px;
+  }
 `
 const ButtonContainer = styled.div`
   display: flex;

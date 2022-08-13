@@ -1,13 +1,17 @@
 import styled from 'styled-components'
 import colors from '../../utils/style/colors'
 import { useInput } from '../../utils/hooks'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
+import { useState } from 'react'
 
 const HomeWrapper = styled.div`
   display: flex;
   justify-content: center;
   background-color: white;
   margin: 0 40px;
+  @media only screen and (max-width: 768px){
+    margin: 20px;
+  }
 `
 
 
@@ -16,8 +20,12 @@ const HomeContainer = styled.div`
   padding: 60px 90px;
   display: flex;
   flex-direction: column;
+  width: 100%;
   max-width: 1200px;
   align-items: center;
+  @media only screen and (max-width: 768px){
+    margin: 0px;
+  }
 `
 
 
@@ -35,9 +43,15 @@ justify-content: center;
 `
 
 const StyledInput = styled.input`
-width: 700px;
+width: 500px;
 margin-bottom: 10px;
 color: ${colors.tertiary};
+@media only screen and (max-width: 768px){
+  width: 300px;
+}
+@media only screen and (min-width: 1080px){
+  width: 800px;
+}
 `
 
 const StyledButtonInput = styled.input`
@@ -51,13 +65,19 @@ font-size: 18px;
 }
 `
 
+const ErrorMessage = styled.p`
+color: red;
+`
+
 function Inscription(){
     const [emailValue, setEmailValue] = useInput()
     const [passwordValue, setPasswordValue] = useInput()
     const navigate = useNavigate()
+    const [errorEmailDuplicate, seterrorEmailDuplicate] = useState(false)
 
     async function inscription(e) {
         e.preventDefault()
+        seterrorEmailDuplicate(false)
         try {
             const signupInfo = {
                 email : emailValue,
@@ -69,11 +89,13 @@ function Inscription(){
                 },
                 body: JSON.stringify(signupInfo)
                 })
+                if(response.status === 403) {seterrorEmailDuplicate(true)}
             const data = await response.json()
             !data.error && navigate("/")
             
         } catch (err) {
             console.log(err)
+            //if(response.status === 403) {console.log('test')}
         }
     }
     
@@ -84,6 +106,9 @@ function Inscription(){
           Rentrez votre adresse Email et choisissez un mot de passe pour vous inscrire.
         </StyledTitle>
         <StyledForm onSubmit={inscription}>
+        {errorEmailDuplicate ? (
+          <ErrorMessage>Erreur : Adresse Email déjà utilisé</ErrorMessage>
+        ) : null }
             <StyledInput
                 placeholder='Email'
                 type='email'
